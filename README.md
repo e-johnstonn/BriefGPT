@@ -23,7 +23,7 @@ docGPT is a powerful, locally-run tool for document summarization and querying u
 # How it works
 ## Chat
 1. Creating and saving embeddings - once you load a file, it is broken into chunks and stored as a FAISS index in the 'embeddings' folder. These embeddings will be used if you load the document into the chat again.
-2. Retrieving, ranking, and processing results - a similarity search is performed on the index to get the top n results. These results are then re-ranked by a function that filters the original query and uses fuzzy matching to find the similarity in exact words between the query and the retrieved results.
+2. Retrieving, ranking, and processing results - a similarity search is performed on the index to get the top n results. These results are then re-ranked by a function that strips the original query of stopwords and uses fuzzy matching to find the similarity in exact words between the query and the retrieved results. This gets better results than solely doing a similarity search.
 3. Output - the re-ranked results and the user query are passed to the llm, and the response is displayed.
 
 
