@@ -1,6 +1,6 @@
 # BriefGPT
 
-docGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain **full control** over your documents and API keys, ensuring privacy and security.
+BriefGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain **full control** over your documents and API keys, ensuring privacy and security.
 
 # Example (using the "Sparks of AGI" paper, sped up)
 ![chat](https://i.imgur.com/ipgvsgb.gif)
