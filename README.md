@@ -1,4 +1,4 @@
-# docGPT
+# BriefGPT
 
 docGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain **full control** over your documents and API keys, ensuring privacy and security.
 
