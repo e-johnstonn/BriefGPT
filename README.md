@@ -1,6 +1,6 @@
 # BriefGPT
 
-BriefGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain **full control** over your documents and API keys, ensuring privacy and security.
+BriefGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain control over your documents and API keys, ensuring privacy and security.
 
 # Example (using the "Sparks of AGI" paper, sped up)
 ![chat](https://i.imgur.com/ipgvsgb.gif)
@@ -40,3 +40,5 @@ BriefGPT is a powerful, locally-run tool for document summarization and querying
 Support for locally run LLM's is coming. 
 
 Built using Langchain! This is project was made for fun, and is likely full of bugs. It is not fully optimized. Contributions or bug reports are welcomed!
+
+todo: keep summary in session state, save transcripts when loaded to summarize, local llm support (fully offline)
