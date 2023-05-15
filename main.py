@@ -112,7 +112,7 @@ PAGES = {
 st.sidebar.title("Navigation")
 selection = st.sidebar.radio("Go to", list(PAGES.keys()))
 st.sidebar.markdown(' [Contact author](mailto:ethanujohnston@gmail.com)')
-st.sidebar.markdown(' [Github](https://github.com/e-johnstonn/docsummarizer)')
+st.sidebar.markdown(' [Github](https://github.com/e-johnstonn/docGPT)')
 page = PAGES[selection]
 page()
 
