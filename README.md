@@ -2,6 +2,11 @@
 
 BriefGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain control over your documents and API keys, ensuring privacy and security.
 
+## Update
+Added support for fully local use! Instructor is used to embed documents, and the LLM can be either LlamaCpp or GPT4ALL, ggml formatted. Put your model in the 'models' folder, set up your environmental variables (model type and path), and run ```streamlit run local_app.py``` to get started. Tested with the following models: [Llama](https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/blob/main/ggml-vic13b-q5_1.bin), [GPT4ALL](https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin). 
+
+Please note this is experimental - it will be significantly slower and the quality may vary. PR's welcome!
+
 # Example (using the "Sparks of AGI" paper, sped up)
 ![chat](https://i.imgur.com/ipgvsgb.gif)
 
@@ -37,8 +42,8 @@ BriefGPT is a powerful, locally-run tool for document summarization and querying
 5. Output - the summary is displayed on the page and saved as a text file. 
 ![summary](https://i.imgur.com/sUcay6a.gif)
 
-Support for locally run LLM's is coming. 
+Improved support for locally run LLM's is coming. 
 
 Built using Langchain! This is project was made for fun, and is likely full of bugs. It is not fully optimized. Contributions or bug reports are welcomed!
 
-todo: keep summary in session state, save transcripts when loaded to summarize, local llm support (fully offline)
+todo: keep summary in session state, save transcripts when loaded to summarize
