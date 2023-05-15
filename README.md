@@ -2,7 +2,7 @@
 
 docGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain **full control** over your documents and API keys, ensuring privacy and security. No paying third parties, no trusting sites with your API key, and no uploading sensitive documents to unknown sources. Built using Langchain!
 
-# Example (using the "Sparks of AGI" paper)
+# Example (using the "Sparks of AGI" paper, sped up)
 ![chat](https://i.imgur.com/ipgvsgb.gif)
 
 
