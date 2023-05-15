@@ -1,6 +1,6 @@
 # docGPT
 
-docGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain **full control** over your documents and API keys, ensuring privacy and security. No paying third parties, no trusting sites with your API key, and no uploading sensitive documents to unknown sources.
+docGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain **full control** over your documents and API keys, ensuring privacy and security. No paying third parties, no trusting sites with your API key, and no uploading sensitive documents to unknown sources. Built using Langchain!
 
 # Setup
 1. Clone the repository
