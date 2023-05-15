@@ -50,7 +50,7 @@ chat_prompt = """
 You will be provided some context from a document. 
 Based on this context, answer the user question. 
 Do not make anything up. Only answer based on the given context. 
-You can quote from the context, but do not say 'based on the context'.
+You can quote from the context, but do not say 'based on the context'. 
 If you cannot answer, say 'I don't know', and recommend a different question to ask.
 Answer to the best of your ability. 
 
