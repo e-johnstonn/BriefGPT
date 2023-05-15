@@ -36,3 +36,5 @@ BriefGPT is a powerful, locally-run tool for document summarization and querying
 4. Summarization - summarization is performed in two steps. First, each retrieved embedding is matched with its corresponding text chunk. Each chunk is passed to GPT-3.5 in an individual call to the API - these calls are made in parallel. Once we have accumulated a summary for each chunk, the summaries are passed to GPT-3.5 or GPT-4 for the final summary.
 5. Output - the summary is displayed on the page and saved as a text file. 
 ![summary](https://i.imgur.com/sUcay6a.gif)
+
+Built using Langchain! This is project was made for fun, and is likely full of bugs. It is not fully optimized. Contributions or bug reports are welcomed!
