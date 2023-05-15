@@ -42,8 +42,8 @@ Please note this is experimental - it will be significantly slower and the quali
 5. Output - the summary is displayed on the page and saved as a text file. 
 ![summary](https://i.imgur.com/sUcay6a.gif)
 
-Support for locally run LLM's is coming. 
+Improved support for locally run LLM's is coming. 
 
 Built using Langchain! This is project was made for fun, and is likely full of bugs. It is not fully optimized. Contributions or bug reports are welcomed!
 
-todo: keep summary in session state, save transcripts when loaded to summarize, local llm support (fully offline)
+todo: keep summary in session state, save transcripts when loaded to summarize
