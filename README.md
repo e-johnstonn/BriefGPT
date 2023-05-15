@@ -4,9 +4,9 @@ docGPT is a powerful, locally-run tool for document summarization and querying u
 
 # Examples (using the "Sparks of AGI" paper)
 
-![summary](https://i.imgur.com/sUcay6a.gif)
 
-![chat](https://i.imgur.com/ipgvsgb.gif)
+
+
 
 # Setup
 1. Clone the repository
@@ -17,12 +17,18 @@ docGPT is a powerful, locally-run tool for document summarization and querying u
 ```streamlit run main.py```
 5. Add your PDF's or .txt's to the documents folder in the project directory
 
+
+
+![chat](https://i.imgur.com/ipgvsgb.gif)
 # How it works
 ## Chat
 1. Creating and saving embeddings - once you load a file, it is broken into chunks and stored as a FAISS index in the 'embeddings' folder. These embeddings will be used if you load the document into the chat again.
 2. Retrieving, ranking, and processing results - a similarity search is performed on the index to get the top n results. These results are then re-ranked by a function that filters the original query and uses fuzzy matching to find the similarity in exact words between the query and the retrieved results.
 3. Output - the re-ranked results and the user query are passed to the llm, and the response is displayed.
 
+
+
+![summary](https://i.imgur.com/sUcay6a.gif)
 ## Summarization
 1. Input - can handle both documents and YouTube URL's - will find the transcript and generate a summary based off of that.
 2.  Processing and embedding - before embedding, documents are stripped of any special tokens that might cause errors. Documents are embedded in chunks of varying size, depending on the overall document's size. 
