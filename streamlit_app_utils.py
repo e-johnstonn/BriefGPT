@@ -1,8 +1,6 @@
 import PyPDF2
 
 from io import StringIO
-
-from dotenv import load_dotenv
 from langchain.chat_models import ChatOpenAI
 
 from chat_utils import load_chat_embeddings, create_and_save_chat_embeddings, qa_from_db, doc_loader
@@ -85,8 +83,6 @@ def token_minimum(doc, minimum=2000):
 
 def validate_api_key(model_name='gpt-3.5-turbo'):
     try:
-        load_dotenv('test.env')
-        print(os.getenv('OPENAI_API_KEY'))
         ChatOpenAI(model_name=model_name).call_as_llm('Hi')
         print('API Key is valid')
         return True

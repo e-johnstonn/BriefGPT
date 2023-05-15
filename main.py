@@ -15,7 +15,7 @@ import glob
 
 #Youtube stuff is kinda broken! I'll fix it soon.
 
-load_dotenv()
+load_dotenv('test.env')
 
 
 
