@@ -1,9 +1,8 @@
-import tempfile
-
 import PyPDF2
 
 from io import StringIO
 
+from dotenv import load_dotenv
 from langchain.chat_models import ChatOpenAI
 
 from chat_utils import load_chat_embeddings, create_and_save_chat_embeddings, qa_from_db, doc_loader
@@ -33,7 +32,7 @@ def pdf_to_text(pdf_file):
     return text.getvalue().encode('utf-8')
 
 
-def check_gpt_4(api_key):
+def check_gpt_4():
     """
     Check if the user has access to GPT-4.
 
@@ -42,10 +41,11 @@ def check_gpt_4(api_key):
     :return: True if the user has access to GPT-4, False otherwise.
     """
     try:
-        ChatOpenAI(openai_api_key=api_key, model_name='gpt-4').call_as_llm('Hi')
+        ChatOpenAI(model_name='gpt-4').call_as_llm('Hi')
         return True
     except Exception as e:
         return False
+
 
 
 def token_limit(doc, maximum=200000):
@@ -83,30 +83,15 @@ def token_minimum(doc, minimum=2000):
     return True
 
 
-def check_key_validity(api_key):
-    """
-    Check if an OpenAI API key is valid.
-
-    :param api_key: The OpenAI API key to check.
-
-    :return: True if the API key is valid, False otherwise.
-    """
+def validate_api_key(model_name='gpt-3.5-turbo'):
     try:
-        ChatOpenAI(openai_api_key=api_key).call_as_llm('Hi')
-        print('API Key is valid')
-        return True
-    except Exception as e:
-        print('API key is invalid or OpenAI is having issues.')
-        print(e)
-        return False
-
-
-def validate_api_key(model_name):
-    try:
+        load_dotenv('test.env')
+        print(os.getenv('OPENAI_API_KEY'))
         ChatOpenAI(model_name=model_name).call_as_llm('Hi')
         print('API Key is valid')
         return True
     except Exception as e:
+        print(e)
         st.warning('API key is invalid or OpenAI is having issues.')
         print('Invalid API key.')
 
@@ -198,7 +183,7 @@ def validate_doc_size(doc):
     return True
 
 
-def validate_input(file_or_transcript, api_key, use_gpt_4):
+def validate_input(file_or_transcript, use_gpt_4):
     """
     Validates the user input, and displays warnings if the input is invalid
 
@@ -214,11 +199,11 @@ def validate_input(file_or_transcript, api_key, use_gpt_4):
         st.warning("Please upload a file or enter a YouTube URL.")
         return False
 
-    if not check_key_validity(api_key):
+    if not validate_api_key():
         st.warning('Key not valid or API is down.')
         return False
 
-    if use_gpt_4 and not check_gpt_4(api_key):
+    if use_gpt_4 and not check_gpt_4():
         st.warning('Key not valid for GPT-4.')
         return False
 
@@ -227,13 +212,13 @@ def validate_input(file_or_transcript, api_key, use_gpt_4):
 
 def generate_answer(db=None, llm_model=None):
     user_message = st.session_state.text_input
-    if db and user_message != "":
-
-        print('About to call API')
-        sys_message = qa_from_db(user_message, db, llm_model)
-        print('Done calling API')
-        st.session_state.history.append({'message': user_message, 'is_user': True})
-        st.session_state.history.append({'message': sys_message, 'is_user': False})
+    if db and user_message.strip() != "":
+        with st.spinner('Generating answer...'):
+            print('About to call API')
+            sys_message = qa_from_db(user_message, db, llm_model)
+            print('Done calling API')
+            st.session_state.history.append({'message': user_message, 'is_user': True})
+            st.session_state.history.append({'message': sys_message, 'is_user': False})
     else:
         print(user_message)
         print('failed')
