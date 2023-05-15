@@ -2,8 +2,8 @@
 
 docGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain **full control** over your documents and API keys, ensuring privacy and security. No paying third parties, no trusting sites with your API key, and no uploading sensitive documents to unknown sources. Built using Langchain!
 
-# Examples (using the "Sparks of AGI" paper)
-
+# Example (using the "Sparks of AGI" paper)
+![chat](https://i.imgur.com/ipgvsgb.gif)
 
 
 
@@ -19,7 +19,7 @@ docGPT is a powerful, locally-run tool for document summarization and querying u
 
 
 
-![chat](https://i.imgur.com/ipgvsgb.gif)
+
 # How it works
 ## Chat
 1. Creating and saving embeddings - once you load a file, it is broken into chunks and stored as a FAISS index in the 'embeddings' folder. These embeddings will be used if you load the document into the chat again.
@@ -28,10 +28,11 @@ docGPT is a powerful, locally-run tool for document summarization and querying u
 
 
 
-![summary](https://i.imgur.com/sUcay6a.gif)
+
 ## Summarization
 1. Input - can handle both documents and YouTube URL's - will find the transcript and generate a summary based off of that.
 2.  Processing and embedding - before embedding, documents are stripped of any special tokens that might cause errors. Documents are embedded in chunks of varying size, depending on the overall document's size. 
 3. Clustering - once the documents are embedded, they are grouped into clusters using the K-means algorithm. The number of clusters can be predetermined (10) or variable (finds optimal number based on the elbow method). The embedding closest to each cluster centroid is retrieved - each cluster might represent a different theme or idea, and the retrieved embeddings are those that best encapsulate that theme or idea - that's the goal, at least.
 4. Summarization - summarization is performed in two steps. First, each retrieved embedding is matched with its corresponding text chunk. Each chunk is passed to GPT-3.5 in an individual call to the API - these calls are made in parallel. Once we have accumulated a summary for each chunk, the summaries are passed to GPT-3.5 or GPT-4 for the final summary.
 5. Output - the summary is displayed on the page and saved as a text file. 
+![summary](https://i.imgur.com/sUcay6a.gif)
