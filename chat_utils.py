@@ -1,11 +1,10 @@
 import os
 
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.llms import OpenAI
-from langchain.llms import GPT4All
+
 
 from fuzzywuzzy import fuzz
 
@@ -76,8 +75,6 @@ def qa_from_db(question, db, llm_name):
     results = results_from_db(db, question)
     reranked_results = rerank_fuzzy_matching(question, results)
     message = f'{chat_prompt} ---------- Context: {reranked_results} -------- User Question: {question} ---------- Response:'
-    print(message)
-    print(llm(message))
     output = llm(message)
     return output
 

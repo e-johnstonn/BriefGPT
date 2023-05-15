@@ -156,7 +156,7 @@ def process_summarize_button(file_or_transcript, use_gpt_4, find_clusters, file=
         st.markdown(summary, unsafe_allow_html=True)
         with open(f'summaries/{name}_summary.txt', 'w') as f:
             f.write(summary)
-        st.markdown(f' # Summary saved as summaries/{name}_summary.txt')
+        st.text(f' Summary saved to summaries/{name}_summary.txt')
 
 
 
