@@ -37,4 +37,6 @@ BriefGPT is a powerful, locally-run tool for document summarization and querying
 5. Output - the summary is displayed on the page and saved as a text file. 
 ![summary](https://i.imgur.com/sUcay6a.gif)
 
+Support for locally run LLM's is coming. 
+
 Built using Langchain! This is project was made for fun, and is likely full of bugs. It is not fully optimized. Contributions or bug reports are welcomed!
