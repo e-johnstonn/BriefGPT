@@ -17,8 +17,6 @@ import glob
 
 load_dotenv('test.env')
 
-
-
 def summarize():
     """
     The main function for the Streamlit app.
@@ -52,11 +50,11 @@ def summarize():
 
     if st.button('Summarize (click once and wait)'):
         if input_method == 'Document':
-            process_summarize_button(selected_file_path, api_key, use_gpt_4, find_clusters)
+            process_summarize_button(selected_file_path, use_gpt_4, find_clusters)
 
         else:
             doc = transcript_loader(youtube_url)
-            process_summarize_button(doc, api_key, use_gpt_4, find_clusters, file=False)
+            process_summarize_button(doc, use_gpt_4, find_clusters, file=False)
 
 
 

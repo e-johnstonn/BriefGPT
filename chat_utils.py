@@ -1,9 +1,11 @@
 import os
 
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.llms import OpenAI
+from langchain.llms import GPT4All
 
 from fuzzywuzzy import fuzz
 
@@ -25,7 +27,7 @@ nltk.download('punkt')
 
 def create_and_save_chat_embeddings(file_path):
     name = os.path.split(file_path)[1].split('.')[0]
-    embeddings = OpenAIEmbeddings(openai_api_key='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')
+    embeddings = OpenAIEmbeddings()
     doc = doc_loader(file_path)
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     split_docs = splitter.split_documents(doc)
@@ -36,7 +38,7 @@ def create_and_save_chat_embeddings(file_path):
 
 def load_chat_embeddings(file_path):
     name = os.path.split(file_path)[1].split('.')[0]
-    embeddings = OpenAIEmbeddings(openai_api_key='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')
+    embeddings = OpenAIEmbeddings()
     db = FAISS.load_local(folder_path='embeddings', index_name=name, embeddings=embeddings)
     return db
 
@@ -53,7 +55,7 @@ def rerank_fuzzy_matching(question, results, num_results=4):
     scores_and_results = []
     for result in results:
         score = fuzz.partial_ratio(question, result.page_content)
-        scores_and_results.append((score, result))
+        scores_and_results.append((score, result.page_content))
 
     scores_and_results.sort(key=lambda x: x[0], reverse=True)
     reranked = [result for score, result in scores_and_results]
@@ -74,14 +76,21 @@ def qa_from_db(question, db, llm_name):
     results = results_from_db(db, question)
     reranked_results = rerank_fuzzy_matching(question, results)
     message = f'{chat_prompt} ---------- Context: {reranked_results} -------- User Question: {question} ---------- Response:'
-    print(reranked_results)
+    print(message)
+    print(llm(message))
     output = llm(message)
     return output
 
 
 def create_llm(llm_name):
-    llm = OpenAI(model_name=llm_name)
+    if type(llm_name) != str:
+        return llm_name
+    else:
+        llm = OpenAI(model_name=llm_name)
     return llm
+
+
+
 
 
 

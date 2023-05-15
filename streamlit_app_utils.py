@@ -92,7 +92,7 @@ def validate_api_key(model_name='gpt-3.5-turbo'):
         print('Invalid API key.')
 
 
-def create_chat_model_for_summary(api_key, use_gpt_4):
+def create_chat_model_for_summary(use_gpt_4):
     """
     Create a chat model ensuring that the token limit of the overall summary is not exceeded - GPT-4 has a higher token limit.
 
@@ -103,12 +103,12 @@ def create_chat_model_for_summary(api_key, use_gpt_4):
     :return: A chat model.
     """
     if use_gpt_4:
-        return ChatOpenAI(openai_api_key=api_key, temperature=0, max_tokens=500, model_name='gpt-3.5-turbo')
+        return ChatOpenAI(temperature=0, max_tokens=500, model_name='gpt-3.5-turbo')
     else:
-        return ChatOpenAI(openai_api_key=api_key, temperature=0, max_tokens=250, model_name='gpt-3.5-turbo')
+        return ChatOpenAI(temperature=0, max_tokens=250, model_name='gpt-3.5-turbo')
 
 
-def process_summarize_button(file_or_transcript, api_key, use_gpt_4, find_clusters, file=True):
+def process_summarize_button(file_or_transcript, use_gpt_4, find_clusters, file=True):
     """
     Processes the summarize button, and displays the summary if input and doc size are valid
 
@@ -122,7 +122,7 @@ def process_summarize_button(file_or_transcript, api_key, use_gpt_4, find_cluste
 
     :return: None
     """
-    if not validate_input(file_or_transcript, api_key, use_gpt_4):
+    if not validate_input(file_or_transcript, use_gpt_4):
         return
 
     with st.spinner("Summarizing... please wait..."):
@@ -140,7 +140,7 @@ def process_summarize_button(file_or_transcript, api_key, use_gpt_4, find_cluste
             combine_prompt = youtube_combine
             name = str(file_or_transcript)[30:44].strip()
 
-        llm = create_chat_model_for_summary(api_key, use_gpt_4)
+        llm = create_chat_model_for_summary(use_gpt_4)
         initial_prompt_list = summary_prompt_creator(map_prompt, 'text', llm)
         final_prompt_list = summary_prompt_creator(combine_prompt, 'text', llm)
 
@@ -148,15 +148,15 @@ def process_summarize_button(file_or_transcript, api_key, use_gpt_4, find_cluste
             return
 
         if find_clusters:
-            summary = doc_to_final_summary(doc, 10, initial_prompt_list, final_prompt_list, api_key, use_gpt_4, find_clusters)
+            summary = doc_to_final_summary(doc, 10, initial_prompt_list, final_prompt_list, use_gpt_4, find_clusters)
 
         else:
-            summary = doc_to_final_summary(doc, 10, initial_prompt_list, final_prompt_list, api_key, use_gpt_4)
+            summary = doc_to_final_summary(doc, 10, initial_prompt_list, final_prompt_list, use_gpt_4)
 
         st.markdown(summary, unsafe_allow_html=True)
         with open(f'summaries/{name}_summary.txt', 'w') as f:
             f.write(summary)
-        st.markdown(f' # Summary saved as {name}_summary.txt')
+        st.markdown(f' # Summary saved as summaries/{name}_summary.txt')
 
 
 
@@ -184,8 +184,6 @@ def validate_input(file_or_transcript, use_gpt_4):
     Validates the user input, and displays warnings if the input is invalid
 
     :param file_or_transcript: The file uploaded by the user or the YouTube URL entered by the user
-
-    :param api_key: The API key entered by the user
 
     :param use_gpt_4: Whether the user wants to use GPT-4
 
@@ -219,6 +217,7 @@ def generate_answer(db=None, llm_model=None):
         print(user_message)
         print('failed')
         print(db)
+
 
 def load_db_from_file_and_create_if_not_exists(file_path):
     with st.spinner('Loading chat embeddings...'):
