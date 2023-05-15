@@ -17,8 +17,6 @@ import glob
 
 load_dotenv()
 
-api_key = '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'
-
 
 
 def summarize():
