@@ -17,6 +17,8 @@ import glob
 
 load_dotenv('test.env')
 
+st.set_page_config(page_title='BriefGPT')
+
 def summarize():
     """
     The main function for the Streamlit app.
