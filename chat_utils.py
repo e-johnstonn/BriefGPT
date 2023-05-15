@@ -47,10 +47,10 @@ def results_from_db(db:FAISS, question, num_results=10):
     return results
 
 
-def rerank_fuzzy_matching(question, results, num_results=4):
+def rerank_fuzzy_matching(question, results, num_results=5):
     filtered_question = filter_stopwords(question)
     if filtered_question == '':
-        return results[-4:]
+        return results[-5:]
     scores_and_results = []
     for result in results:
         score = fuzz.partial_ratio(question, result.page_content)
@@ -74,7 +74,12 @@ def qa_from_db(question, db, llm_name):
     llm = create_llm(llm_name)
     results = results_from_db(db, question)
     reranked_results = rerank_fuzzy_matching(question, results)
-    message = f'{chat_prompt} ---------- Context: {reranked_results} -------- User Question: {question} ---------- Response:'
+    if type(llm_name) != str:
+        reranked_results = reranked_results[:2]
+        message = f'Answer the user question based on the context. Question: {question} Context: {reranked_results} Answer:'
+    else:
+        message = f'{chat_prompt} ---------- Context: {reranked_results} -------- User Question: {question} ---------- Response:'
+    print(message)
     output = llm(message)
     return output
 
