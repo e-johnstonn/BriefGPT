@@ -20,7 +20,9 @@ load_dotenv('test.env')
 
 model_type = os.getenv('MODEL_TYPE')
 model_path = os.getenv('MODEL_PATH')
-print(model_path)
+
+
+accepted_filetypes = ['.txt', '.pdf', '.epub']
 
 #Model is initialized here. Configure it with your parameters and the path to your model.
 
@@ -44,7 +46,7 @@ def chat():
         st.session_state.text_input = ''
     directory = 'documents'
     files = os.listdir(directory)
-    files = [file for file in files if file.endswith('.txt') or file.endswith('.pdf')]
+    files = [file for file in files if file.endswith(tuple(accepted_filetypes))]
     selected_file = st.selectbox('Select a file', files)
     st.write('You selected: ' + selected_file)
     selected_file_path = os.path.join(directory, selected_file)

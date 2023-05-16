@@ -6,7 +6,7 @@ import tiktoken
 from langchain import PromptTemplate
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chat_models import ChatOpenAI
-from langchain.document_loaders import YoutubeLoader, TextLoader, PyPDFLoader
+from langchain.document_loaders import YoutubeLoader, TextLoader, PyPDFLoader, UnstructuredEPubLoader
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.schema import Document
 
@@ -31,6 +31,12 @@ def doc_loader(file_path: str):
         loader = TextLoader(file_path, encoding='utf-8')
     elif file_path.endswith('.pdf'):
         loader = PyPDFLoader(file_path)
+    elif file_path.endswith('.epub'):
+        try:
+            loader = UnstructuredEPubLoader(file_path)
+        except Exception as e:
+            st.warning('Error loading file - ensure you have pandoc installed and added to PATH.')
+
     return loader.load()
 
 

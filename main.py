@@ -19,6 +19,8 @@ load_dotenv('test.env')
 
 st.set_page_config(page_title='BriefGPT')
 
+accepted_filetypes = ['.txt', '.pdf', '.epub']
+
 def summarize():
     """
     The main function for the Streamlit app.
@@ -33,7 +35,7 @@ def summarize():
     if input_method == 'Document':
         directory = 'documents'
         files = os.listdir(directory)
-        files = [file for file in files if file.endswith('.txt') or file.endswith('.pdf')]
+        files = [file for file in files if file.endswith(tuple(accepted_filetypes))]
         if files:
             selected_file = st.selectbox('Select a file', files)
             st.write('You selected: ' + selected_file)
@@ -67,7 +69,7 @@ def chat():
         st.session_state.text_input = ''
     directory = 'documents'
     files = os.listdir(directory)
-    files = [file for file in files if file.endswith('.txt') or file.endswith('.pdf')]
+    files = [file for file in files if file.endswith(tuple(accepted_filetypes))]
     selected_file = st.selectbox('Select a file', files)
     st.write('You selected: ' + selected_file)
     selected_file_path = os.path.join(directory, selected_file)
@@ -96,7 +98,7 @@ def documents():
     st.markdown('Documents are stored in the documents folder in the project directory.')
     directory = 'documents'
     files = os.listdir(directory)
-    files = [file for file in files if file.endswith('.txt') or file.endswith('.pdf')]
+    files = [file for file in files if file.endswith(tuple(accepted_filetypes))]
     if files:
         files_df = pd.DataFrame(files, columns=['File Name'], index=range(1, len(files) + 1))
         st.dataframe(files_df, width=1000)
