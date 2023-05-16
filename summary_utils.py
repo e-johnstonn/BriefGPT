@@ -36,6 +36,7 @@ def doc_loader(file_path: str):
             loader = UnstructuredEPubLoader(file_path)
         except Exception as e:
             st.warning('Error loading file - ensure you have pandoc installed and added to PATH.')
+            return None
 
     return loader.load()
 
