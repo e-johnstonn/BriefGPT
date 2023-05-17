@@ -84,12 +84,15 @@ def chat():
     if st.button('Ask') and 'db' in st.session_state and validate_api_key(model_name):
         answer = generate_answer(st.session_state.db, model_name)
 
-
     if 'history' not in st.session_state:
         st.session_state.history = []
+    if 'sources' not in st.session_state:
+        st.session_state.sources = []
     for i, chat in enumerate(st.session_state.history):
         st_message(**chat, key=str(i))
-
+    for i, source in enumerate(st.session_state.sources):
+        with st.expander('Sources', expanded=False):
+            st.markdown(source)
 
 
 
