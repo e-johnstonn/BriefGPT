@@ -3,7 +3,7 @@
 BriefGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain control over your documents and API keys, ensuring privacy and security.
 
 ## Update
-Added support for fully local use! Instructor is used to embed documents, and the LLM can be either LlamaCpp or GPT4ALL, ggml formatted. Put your model in the 'models' folder, set up your environmental variables (model type and path), and run ```streamlit run local_app.py``` to get started. Tested with the following models: [Llama](https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/blob/main/ggml-vic13b-q5_1.bin), [GPT4ALL](https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin). 
+Added support for fully local use! Instructor is used to embed documents, and the LLM can be either LlamaCpp or GPT4ALL, ggml formatted. Put your model in the 'models' folder, set up your environmental variables (model type and path), and run ```streamlit run local_app.py``` to get started. Tested with the following models: [Llama](https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/blob/main/ggml-old-vic13b-q5_0.bin), [GPT4ALL](https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin).
 
 Please note this is experimental - it will be significantly slower and the quality may vary. PR's welcome!
 
