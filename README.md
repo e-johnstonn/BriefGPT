@@ -21,6 +21,7 @@ Please note this is experimental - it will be significantly slower and the quali
 4. Navigate to the project directory and run
 ```streamlit run main.py```
 5. Add your PDF's or .txt's to the documents folder in the project directory
+6. If using epubs, ensure you have pandoc installed and added to PATH
 
 
 

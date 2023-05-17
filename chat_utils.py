@@ -54,7 +54,7 @@ def rerank_fuzzy_matching(question, results, num_results=5):
     scores_and_results = []
     for result in results:
         score = fuzz.partial_ratio(question, result.page_content)
-        scores_and_results.append((score, result.page_content))
+        scores_and_results.append((score, result))
 
     scores_and_results.sort(key=lambda x: x[0], reverse=True)
     reranked = [result for score, result in scores_and_results]
@@ -70,19 +70,30 @@ def filter_stopwords(question):
 
 
 def qa_from_db(question, db, llm_name):
-    print('getting results...')
     llm = create_llm(llm_name)
     results = results_from_db(db, question)
     reranked_results = rerank_fuzzy_matching(question, results)
+    reranked_content = [result.page_content for result in reranked_results]
     if type(llm_name) != str:
         reranked_results = reranked_results[:2]
-        message = f'Answer the user question based on the context. Question: {question} Context: {reranked_results} Answer:'
+        message = f'Answer the user question based on the context. Question: {question} Context: {reranked_content[:2]} Answer:'
     else:
-        message = f'{chat_prompt} ---------- Context: {reranked_results} -------- User Question: {question} ---------- Response:'
-    print(message)
+        message = f'{chat_prompt} ---------- Context: {reranked_content} -------- User Question: {question} ---------- Response:'
+    formatted_sources = source_formatter(reranked_results)
     output = llm(message)
-    return output
+    return output, formatted_sources
 
+
+
+def source_formatter(sources):
+    formatted_strings = []
+    for doc in sources:
+        source_name = doc.metadata['source'].split('\\')[-1]
+        source_content = doc.page_content.replace('\n', ' ')  # Replacing newlines with spaces
+        formatted_string = f"Source name: {source_name} | Source content: '{source_content}' - end of content"
+        formatted_strings.append(formatted_string)
+    final_string = '\n\n\n'.join(formatted_strings)
+    return final_string
 
 def create_llm(llm_name):
     if type(llm_name) != str:
