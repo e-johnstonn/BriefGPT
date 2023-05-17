@@ -28,10 +28,10 @@ loading = st.spinner('Initializing LLM')
 with st.spinner('Initializing LLM...'):
     if 'llm' not in st.session_state:
         with st.spinner('Loading LLM...'):
-            if model_type == 'LlamaCpp':
+            if model_type.upper() == 'LlamaCpp'.upper():
                 llm = LlamaCpp(model_path=model_path, n_ctx=1000)
                 st.session_state.llm = llm
-            elif model_type == 'GPT4All':
+            elif model_type.upper() == 'GPT4All':
                 llm = GPT4All(model=model_path, backend='gptj', n_ctx=1000)
                 st.session_state.llm = llm
             else:
