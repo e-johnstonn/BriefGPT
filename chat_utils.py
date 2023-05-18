@@ -16,13 +16,22 @@ from my_prompts import chat_prompt
 
 from dotenv import load_dotenv
 
-from summary_utils import doc_loader, remove_special_tokens
+from summary_utils import doc_loader, remove_special_tokens, directory_loader
 
-load_dotenv()
 
 nltk.download('stopwords')
 nltk.download('punkt')
 
+
+def create_and_save_directory_embeddings(directory_path, name):
+    embeddings = OpenAIEmbeddings()
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    docs = directory_loader(directory_path)
+    split_docs = splitter.split_documents(docs)
+    processed_split_docs = remove_special_tokens(split_docs)
+    db = FAISS.from_documents(processed_split_docs, embeddings)
+    db.save_local(folder_path='directory_embeddings', index_name=name)
+    return db
 
 def create_and_save_chat_embeddings(file_path):
     name = os.path.split(file_path)[1].split('.')[0]
@@ -40,6 +49,8 @@ def load_chat_embeddings(file_path):
     embeddings = OpenAIEmbeddings()
     db = FAISS.load_local(folder_path='embeddings', index_name=name, embeddings=embeddings)
     return db
+
+
 
 
 def results_from_db(db:FAISS, question, num_results=10):

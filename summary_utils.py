@@ -1,3 +1,4 @@
+import os
 import time
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -39,6 +40,27 @@ def doc_loader(file_path: str):
             return None
 
     return loader.load()
+
+
+def directory_loader(directory):
+    files = os.listdir(directory)
+    documents = []
+    mixed_documents = []
+    for file in files:
+        if file.endswith('.txt'):
+            loader = TextLoader(os.path.join(directory, file), encoding='utf-8')
+            documents.append(loader.load())
+        elif file.endswith('.pdf'):
+            loader = PyPDFLoader(os.path.join(directory, file))
+            documents.append(loader.load())
+        elif file.endswith('.epub'):
+            loader = UnstructuredEPubLoader(os.path.join(directory, file))
+            documents.append(loader.load())
+    for doc in documents:
+        for section in doc:
+            mixed_documents.append(section)
+    return mixed_documents
+
 
 
 def token_counter(text: str):

@@ -1,7 +1,10 @@
 import PyPDF2
 
 from io import StringIO
+
+from langchain import FAISS
 from langchain.chat_models import ChatOpenAI
+from langchain.embeddings import OpenAIEmbeddings
 
 from chat_utils import load_chat_embeddings, create_and_save_chat_embeddings, qa_from_db, doc_loader
 
@@ -234,4 +237,17 @@ def load_db_from_file_and_create_if_not_exists(file_path):
         st.success('Loaded successfully! Start a chat below.')
     else:
         st.warning('Something went wrong... failed to load chat embeddings.')
+    return db
+
+
+def load_dir_chat_embeddings(file_path):
+    name = os.path.split(file_path)[1].split('.')[0]
+    embeddings = OpenAIEmbeddings()
+    try:
+        db = FAISS.load_local(folder_path='directory_embeddings', index_name=name, embeddings=embeddings)
+        st.success('Embeddings loaded successfully.')
+    except Exception as e:
+        st.warning('Loading embeddings failed. Please try again.')
+        return None
+
     return db

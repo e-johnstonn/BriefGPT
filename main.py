@@ -2,7 +2,9 @@ import os
 import streamlit as st
 from streamlit_chat import message as st_message
 from dotenv import load_dotenv
-from streamlit_app_utils import process_summarize_button, generate_answer, load_db_from_file_and_create_if_not_exists, validate_api_key
+
+from chat_utils import create_and_save_directory_embeddings
+from streamlit_app_utils import process_summarize_button, generate_answer, load_db_from_file_and_create_if_not_exists, validate_api_key, load_dir_chat_embeddings
 
 from summary_utils import transcript_loader
 
@@ -63,21 +65,48 @@ def summarize():
 
 
 def chat():
+    dir_or_doc = st.radio('Select a chat method', ('Document', 'Directory'))
     st.title('Chat')
     model_name = st.radio('Select a model', ('gpt-3.5-turbo', 'gpt-4'))
-    if 'text_input' not in st.session_state:
-        st.session_state.text_input = ''
-    directory = 'documents'
-    files = os.listdir(directory)
-    files = [file for file in files if file.endswith(tuple(accepted_filetypes))]
-    selected_file = st.selectbox('Select a file', files)
-    st.write('You selected: ' + selected_file)
-    selected_file_path = os.path.join(directory, selected_file)
+    if dir_or_doc == 'Document':
+        if 'text_input' not in st.session_state:
+            st.session_state.text_input = ''
+        directory = 'documents'
+        files = os.listdir(directory)
+        files = [file for file in files if file.endswith(tuple(accepted_filetypes))]
+        selected_file = st.selectbox('Select a file', files)
+        st.write('You selected: ' + selected_file)
+        selected_file_path = os.path.join(directory, selected_file)
 
-    if st.button('Load file (first time might take a second...) pressing this button will reset the chat history'):
-        db = load_db_from_file_and_create_if_not_exists(selected_file_path)
-        st.session_state.db = db
-        st.session_state.history = []
+        if st.button('Load file (first time might take a second...) pressing this button will reset the chat history'):
+            db = load_db_from_file_and_create_if_not_exists(selected_file_path)
+            st.session_state.db = db
+            st.session_state.history = []
+
+    else:
+        if 'text_input' not in st.session_state:
+            st.session_state.text_input = ''
+        load_or_create = st.checkbox('Load from existing directory (already embedded)', value=False)
+        if load_or_create:
+            embeddings = os.listdir('directory_embeddings')
+            embeddings = [file for file in embeddings if file.endswith('.faiss')]
+            select_embedding = st.selectbox('Select an embedding', embeddings)
+            load = st.button('Load embeddings')
+            if load:
+                embedding_file_path = os.path.join('directory_embeddings', select_embedding)
+                db = load_dir_chat_embeddings(embedding_file_path)
+                st.session_state.db = db
+                st.session_state.history = []
+
+        else:
+            directory = st.text_input('Enter a directory to load from - just "documents" will load the default documents folder')
+            name = st.text_input('Enter a unique nickname for the directory')
+            if st.button('Load directory (first time might take a second...) pressing this button will reset the chat history'):
+                with st.spinner('Loading directory...'):
+                    db = create_and_save_directory_embeddings(directory, name)
+                    st.session_state.db = db
+                    st.success('Directory loaded successfully')
+                    st.session_state.history = []
 
     user_input = st.text_input('Enter your question', key='text_input')
 
@@ -93,7 +122,6 @@ def chat():
     for i, source in enumerate(st.session_state.sources):
         with st.expander('Sources', expanded=False):
             st.markdown(source)
-
 
 
 def documents():
