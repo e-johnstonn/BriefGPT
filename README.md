@@ -43,6 +43,15 @@ Please note this is experimental - it will be significantly slower and the quali
 5. Output - the summary is displayed on the page and saved as a text file. 
 ![summary](https://i.imgur.com/sUcay6a.gif)
 
+
+## Architecture
+![Architecture](https://github.com/vasudev-pal/BriefGPT/assets/120969150/687863e4-5a4f-415e-92c8-3354b1fb3f8d)
+
+The Architecture elaborates the workflow of the model.
+1. It takes input Text Document
+2. Create Words Embeddings using FAISS[performs similarity search and words that are close in meaning are clustered near to one another in vector space]
+3. Taking extracted ebeddings as input and constructing a prompt, and then sending that to the LLM.
+
 Improved support for locally run LLM's is coming. 
 
 Built using Langchain! This is project was made for fun, and is likely full of bugs. It is not fully optimized. Contributions or bug reports are welcomed!
