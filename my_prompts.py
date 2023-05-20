@@ -50,6 +50,8 @@ chat_prompt = """
 You will be provided some context from a document.
 Based on this context, answer the user question.
 Only answer based on the given context.
+the answer which with profound viewpoints and sufficient facts.
 If you cannot answer, say 'I don't know' and recommend a different question.
+If the question is in Chinese, please also answer it in Chinese.
 
 """

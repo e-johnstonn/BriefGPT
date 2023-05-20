@@ -1,17 +1,21 @@
 import os
 
 from langchain import FAISS
-from langchain.embeddings import HuggingFaceInstructEmbeddings
+from langchain.embeddings import HuggingFaceInstructEmbeddings, HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 from summary_utils import doc_loader, remove_special_tokens
 
 import streamlit as st
+def get_embeddings(docs_lang):
+    if docs_lang.upper() in ['CHINESE', 'ZH']:
+        return HuggingFaceEmbeddings(model_name='GanymedeNil/text2vec-large-chinese')
+    else:
+        return HuggingFaceInstructEmbeddings(model_name='hkunlp/instructor-base')
 
-
-def create_and_save_local(file_path, model_name):
+def create_and_save_local(file_path, docs_lang):
     name = os.path.split(file_path)[1].split('.')[0]
-    embeddings = HuggingFaceInstructEmbeddings(model_name=model_name)
+    embeddings = get_embeddings(docs_lang)
     doc = doc_loader(file_path)
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     split_docs = splitter.split_documents(doc)
@@ -20,9 +24,9 @@ def create_and_save_local(file_path, model_name):
     db.save_local(folder_path='local_embeddings', index_name=name)
 
 
-def load_local_embeddings(file_path, model_name):
+def load_local_embeddings(file_path, docs_lang):
     name = os.path.split(file_path)[1].split('.')[0]
-    embeddings = HuggingFaceInstructEmbeddings(model_name=model_name)
+    embeddings = get_embeddings(docs_lang)
     db = FAISS.load_local(folder_path='local_embeddings', index_name=name, embeddings=embeddings)
     return db
 

@@ -20,7 +20,7 @@ load_dotenv('test.env')
 
 model_type = os.getenv('MODEL_TYPE')
 model_path = os.getenv('MODEL_PATH')
-
+docs_lang = os.getenv('DOCS_LANG')
 
 accepted_filetypes = ['.txt', '.pdf', '.epub']
 
@@ -30,10 +30,10 @@ loading = st.spinner('Initializing LLM')
 with st.spinner('Initializing LLM...'):
     if 'llm' not in st.session_state:
         with st.spinner('Loading LLM...'):
-            if model_type == 'LlamaCpp':
+            if model_type.upper() == 'LlamaCpp'.upper():
                 llm = LlamaCpp(model_path=model_path, n_ctx=1000)
                 st.session_state.llm = llm
-            elif model_type == 'GPT4All':
+            elif model_type.upper() == 'GPT4All'.upper():
                 llm = GPT4All(model=model_path, backend='gptj', n_ctx=1000)
                 st.session_state.llm = llm
             else:
@@ -52,7 +52,7 @@ def chat():
     selected_file_path = os.path.join(directory, selected_file)
 
     if st.button('Load file (first time might take a second...) pressing this button will reset the chat history'):
-        db = load_db_from_file_and_create_if_not_exists_local(selected_file_path, 'hkunlp/instructor-base')
+        db = load_db_from_file_and_create_if_not_exists_local(selected_file_path, docs_lang)
         st.session_state.db = db
         st.session_state.history = []
 
