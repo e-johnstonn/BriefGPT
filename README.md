@@ -3,13 +3,14 @@
 BriefGPT is a powerful, locally-run tool for document summarization and querying using OpenAI's models. You retain control over your documents and API keys, ensuring privacy and security.
 
 ## Update
-Added support for fully local use! Instructor is used to embed documents, and the LLM can be either LlamaCpp or GPT4ALL, ggml formatted. Put your model in the 'models' folder, set up your environmental variables (model type and path), and run ```streamlit run local_app.py``` to get started. Tested with the following models: [Llama](https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/blob/main/ggml-old-vic13b-q5_0.bin), [GPT4ALL](https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin).
+Added support for fully local use! Instructor is used to embed documents, and the LLM can be either LlamaCpp or GPT4ALL, ggml formatted. Put your model in the 'models' folder, set up your environmental variables (model type and path), and run ```streamlit run local_app.py``` to get started. Tested with the following models: [Llama](https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/blob/main/ggml-old-vic13b-q5_0.bin), [GPT4ALL](https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin), [Chinese-LLaMA-Alpaca](https://huggingface.co/HardSoft2023/chinese-alpaca-plus-lora-7b-llama.cpp-q4_0.bin).
 
 Please note this is experimental - it will be significantly slower and the quality may vary. PR's welcome!
 
-# Example (using the "Sparks of AGI" paper, sped up)
+# Example 1 (using the "Sparks of AGI" paper, sped up)
 ![chat](https://i.imgur.com/ipgvsgb.gif)
-
+# Example 2 (Chinese Demo，关于李白)
+<img src="https://wechatlongterm.oss-cn-beijing.aliyuncs.com/%E5%9B%9E%E7%AD%94%E7%9A%84%E9%9D%9E%E5%B8%B8%E5%A5%BD.png" alt="回答的非常好" style="zoom:33%;" />
 
 
 
