@@ -29,7 +29,7 @@ def doc_loader(file_path: str):
     :return: A langchain Document object.
     """
     if file_path.endswith('.txt'):
-        loader = TextLoader(file_path, encoding='utf-8')
+        loader = TextLoader(file_path)
     elif file_path.endswith('.pdf'):
         loader = PyPDFLoader(file_path)
     elif file_path.endswith('.epub'):
@@ -48,7 +48,7 @@ def directory_loader(directory):
     mixed_documents = []
     for file in files:
         if file.endswith('.txt'):
-            loader = TextLoader(os.path.join(directory, file), encoding='utf-8')
+            loader = TextLoader(os.path.join(directory, file))
             documents.append(loader.load())
         elif file.endswith('.pdf'):
             loader = PyPDFLoader(os.path.join(directory, file))
