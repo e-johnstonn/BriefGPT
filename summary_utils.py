@@ -255,7 +255,7 @@ def create_summary_from_docs(summary_docs, initial_chain, final_sum_list, use_gp
         max_tokens = 3800 - int(count)
         model = 'gpt-3.5-turbo'
 
-    final_sum_list[2] = ChatOpenAI(temperature=0, max_tokens=max_tokens, model_name=model)
+    final_sum_list[2] = ChatOpenAI(temperature=.7, max_tokens=max_tokens, model_name=model)
     final_sum_chain = create_summarize_chain(final_sum_list)
     summaries = Document(page_content=summaries)
     final_summary = final_sum_chain.run([summaries])

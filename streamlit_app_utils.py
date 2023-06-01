@@ -207,17 +207,18 @@ def validate_input(file_or_transcript, use_gpt_4):
     return True
 
 
-def generate_answer(db=None, llm_model=None):
+def generate_answer(db=None, llm_model=None, hypothetical=False):
     user_message = st.session_state.text_input
     if db and user_message.strip() != "":
         with st.spinner('Generating answer...'):
             print('About to call API')
-            sys_message, sources = qa_from_db(user_message, db, llm_model)
+            sys_message, sources = qa_from_db(user_message, db, llm_model, hypothetical)
             print('Done calling API')
             st.session_state.history.append({'message': user_message, 'is_user': True})
             st.session_state.history.append({'message': sys_message, 'is_user': False})
             st.session_state.sources = []
             st.session_state.sources.append(sources)
+            return sys_message, sources
     else:
         print(user_message)
         print('failed')

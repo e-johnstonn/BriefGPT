@@ -12,7 +12,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-from my_prompts import chat_prompt
+from my_prompts import chat_prompt, hypothetical_prompt
 
 from dotenv import load_dotenv
 
@@ -80,13 +80,18 @@ def filter_stopwords(question):
     return filtered_sentence
 
 
-def qa_from_db(question, db, llm_name):
+def qa_from_db(question, db, llm_name, hypothetical):
     llm = create_llm(llm_name)
-    results = results_from_db(db, question)
+    if hypothetical:
+        hypothetical_llm = create_llm(llm_name)
+        hypothetical_answer = hypothetical_document_embeddings(question, hypothetical_llm)
+        results = results_from_db(db, hypothetical_answer)
+    else:
+        results = results_from_db(db, question)
     reranked_results = rerank_fuzzy_matching(question, results)
     reranked_content = [result.page_content for result in reranked_results]
+
     if type(llm_name) != str:
-        reranked_results = reranked_results[:2]
         message = f'Answer the user question based on the context. Question: {question} Context: {reranked_content[:2]} Answer:'
     else:
         message = f'{chat_prompt} ---------- Context: {reranked_content} -------- User Question: {question} ---------- Response:'
@@ -112,6 +117,12 @@ def create_llm(llm_name):
     else:
         llm = OpenAI(model_name=llm_name)
     return llm
+
+def hypothetical_document_embeddings(question, llm):
+    message = f'{hypothetical_prompt} {question} :'
+    output = llm(message)
+    print("output: ", output)
+    return output
 
 
 

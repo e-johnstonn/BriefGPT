@@ -53,3 +53,14 @@ Only answer based on the given context.
 If you cannot answer, say 'I don't know' and recommend a different question.
 
 """
+
+hypothetical_prompt = """
+Given the user's question, please generate a response that mimics the exact format in which the relevant information would appear within a document, even if the information does not exist.
+The response should not offer explanations, context, or commentary, but should emulate the precise structure in which the answer would be found in a hypothetical document. 
+Factuality is not important, the priority is the hypothetical structure of the excerpt. Use made-up facts to emulate the structure. 
+For example, if the user question is "who are the authors?", the response should be something like
+'Authors: John Smith, Jane Doe, and Bob Jones'
+The user's question is:
+
+"""
+
