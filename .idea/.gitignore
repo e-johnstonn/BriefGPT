@@ -8,5 +8,5 @@ __pycache__/
 briefgpt/*
 
 # .secrets
-.streamlit/secrets.toml
+../.streamlit/secrets.toml
 

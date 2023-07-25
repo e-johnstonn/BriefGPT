@@ -1,0 +1,6 @@
+# virtualenv
+briefgpt/*
+
+# .secrets
+.streamlit/secrets.toml
+
