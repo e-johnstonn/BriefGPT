@@ -3,10 +3,4 @@
 /workspace.xml
 __pycache__/
 
-# virtualenv
-# environment
-briefgpt/*
-
-# .secrets
-../.streamlit/secrets.toml
 

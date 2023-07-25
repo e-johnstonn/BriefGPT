@@ -1,0 +1,8 @@
+# Secrets
+.streamlit/secrets.toml
+
+# environment
+briefgpt/*
+
+# test env
+test.env

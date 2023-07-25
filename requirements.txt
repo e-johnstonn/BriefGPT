@@ -98,9 +98,9 @@ python-docx==0.8.11
 python-dotenv==1.0.0
 python-Levenshtein==0.21.0
 python-magic==0.4.27
-python-pptx==0.6.21
+python-pptx==0.6.2
 pytz==2023.3
-PyYAML==6.0
+#PyYAML==6.0
 rapidfuzz==3.0.0
 regex==2023.5.5
 requests==2.30.0

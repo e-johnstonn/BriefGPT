@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 from chat_utils import create_and_save_directory_embeddings
 from streamlit_app_utils import process_summarize_button, generate_answer, load_db_from_file_and_create_if_not_exists, validate_api_key, load_dir_chat_embeddings
-
+from trubrics.integrations.streamlit import FeedbackCollector
 from summary_utils import transcript_loader
 
 import pandas as pd
@@ -13,7 +13,8 @@ import pandas as pd
 import glob
 
 
-
+email = st.secrets.get("TRUBRICS_EMAIL")
+password = st.secrets.get("TRUBRICS_PASSWORD")
 
 #Youtube stuff is kinda broken! I'll fix it soon.
 
@@ -65,9 +66,17 @@ def summarize():
 
 
 def chat():
+
+    if 'answer' not in st.session_state:
+        st.session_state.answer = ''
+    
+    if 'answered' not in st.session_state:
+        st.session_state.answered = False
+
     dir_or_doc = st.radio('Select a chat method', ('Document', 'Directory'))
     st.title('Chat')
     model_name = st.radio('Select a model', ('gpt-3.5-turbo', 'gpt-4'))
+    st.session_state['model_name'] = model_name
     hypothetical = st.checkbox('Use hypothetical embeddings', value=False)
     if dir_or_doc == 'Document':
         if 'text_input' not in st.session_state:
@@ -113,6 +122,9 @@ def chat():
 
     if st.button('Ask') and 'db' in st.session_state and validate_api_key(model_name):
         answer = generate_answer(st.session_state.db, model_name, hypothetical)
+        st.session_state['answered'] = True
+        st.session_state['answer'] = answer 
+
 
     if 'history' not in st.session_state:
         st.session_state.history = []
@@ -124,6 +136,26 @@ def chat():
         with st.expander('Sources', expanded=False):
             st.markdown(source)
 
+    if st.session_state['answered']:
+        
+        collector = FeedbackCollector(
+            component_name="default",
+            email=email,
+            password=password,
+        )
+        print('ANSWER')
+        print(st.session_state['answer'][0])
+
+        feedback = collector.st_feedback(
+            feedback_type="faces",
+            model=model_name,
+            open_feedback_label="[Optional] Provide additional feedback",
+            metadata={
+                "user_input": user_input,
+                "answer": st.session_state['answer'][0],
+            },
+            tags=["main_code"],
+        )
 
 def documents():
     st.title('Documents')
@@ -142,7 +174,7 @@ def compare_results():
     st.title('Compare')
     st.write("Compare retrieval results using hypothetical embeddings vs. normal embeddings. Support for comparing multiple models coming soon.")
     model_name = 'gpt-3.5-turbo'
-
+    st.session_state['model_name'] = model_name
     if 'text_input' not in st.session_state:
         st.session_state.text_input = ''
     directory = 'documents'
@@ -200,6 +232,8 @@ st.sidebar.markdown(' [Github](https://github.com/e-johnstonn/docGPT)')
 st.sidebar.markdown('[More info on hypothetical embeddings here](https://arxiv.org/abs/2212.10496)', unsafe_allow_html=True)
 page = PAGES[selection]
 page()
+
+
 
 
 
