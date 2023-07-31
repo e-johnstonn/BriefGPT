@@ -32,6 +32,18 @@ def summarize():
     """
     st.title("Summarize")
     st.write("Summaries are saved to the 'summaries' folder in the project directory.")
+    
+    if 'input' not in st.session_state:
+        st.session_state.input = False
+    
+    if 'summary' not in st.session_state:
+        st.session_state.summary = ''
+    
+    if 'name' not in st.session_state:
+        st.session_state.name = ''
+    
+    if 'model_name' not in st.session_state:
+        st.session_state.model_name = ''
 
     input_method = st.radio("Select input method", ('Document', 'YouTube URL'))
 
@@ -54,14 +66,43 @@ def summarize():
     find_clusters = st.checkbox('Optimal clustering (saves on tokens)', value=False)
 
 
-
+    
     if st.button('Summarize (click once and wait)'):
+        st.session_state.input = True
         if input_method == 'Document':
-            process_summarize_button(selected_file_path, use_gpt_4, find_clusters)
+            st.session_state.model_name,st.session_state.summary,st.session_state.name = process_summarize_button(selected_file_path, use_gpt_4, find_clusters)
 
         else:
             doc = transcript_loader(youtube_url)
-            process_summarize_button(doc, use_gpt_4, find_clusters, file=False)
+            st.session_state.model_name,st.session_state.summary,st.session_state.name = process_summarize_button(doc, use_gpt_4, find_clusters, file=False)
+
+    if st.session_state.input:
+
+        st.markdown(st.session_state.summary, unsafe_allow_html=True)
+        with open(f'summaries/{st.session_state.name}_summary.txt', 'w') as f:
+            f.write(st.session_state.summary)
+        st.text(f' Summary saved to summaries/{st.session_state.name}_summary.txt')
+
+        collector = FeedbackCollector(
+            component_name="default",
+            email=email,
+            password=password,
+        )
+        
+        feedback = collector.st_feedback(
+            feedback_type="faces",
+            model=st.session_state.model_name,
+            open_feedback_label="[Optional] Provide additional feedback",
+            metadata={
+                "user_input": input_method,
+                "summary": st.session_state.summary,
+            },
+            tags=["summary"],
+        )
+
+
+
+
 
 
 
@@ -72,6 +113,9 @@ def chat():
     
     if 'answered' not in st.session_state:
         st.session_state.answered = False
+    
+    if 'model_name' not in st.session_state:
+        st.session_state.model_name = ''
 
     dir_or_doc = st.radio('Select a chat method', ('Document', 'Directory'))
     st.title('Chat')
@@ -143,18 +187,16 @@ def chat():
             email=email,
             password=password,
         )
-        print('ANSWER')
-        print(st.session_state['answer'][0])
 
         feedback = collector.st_feedback(
             feedback_type="faces",
-            model=model_name,
+            model=st.session_state.model_name,
             open_feedback_label="[Optional] Provide additional feedback",
             metadata={
                 "user_input": user_input,
                 "answer": st.session_state['answer'][0],
             },
-            tags=["main_code"],
+            tags=["chat"],
         )
 
 def documents():
@@ -171,10 +213,21 @@ def documents():
 
 
 def compare_results():
+    if 'input' not in st.session_state:
+        st.session_state.input = False
+    if 'answer_a' not in st.session_state:
+        st.session_state.answer_a = ''
+    if 'answer_b' not in st.session_state:
+        st.session_state.answer_b = ''
+    if 'sources_a' not in st.session_state:
+        st.session_state.sources_a = ''
+    if 'sources_b' not in st.session_state:
+        st.session_state.sources_b = ''
+    
     st.title('Compare')
     st.write("Compare retrieval results using hypothetical embeddings vs. normal embeddings. Support for comparing multiple models coming soon.")
     model_name = 'gpt-3.5-turbo'
-    st.session_state['model_name'] = model_name
+
     if 'text_input' not in st.session_state:
         st.session_state.text_input = ''
     directory = 'documents'
@@ -195,25 +248,49 @@ def compare_results():
     user_input = st.text_input('Enter your question', key='text_input')
 
     if st.button('Ask') and 'db' in st.session_state and validate_api_key(model_name):
+        st.session_state.input=True
         st.markdown('Question: ' + user_input)
-        answer_a, sources_a = generate_answer(st.session_state.db, model_name, hypothetical=True)
-        answer_b, sources_b = generate_answer(st.session_state.db, model_name, hypothetical=False)
+        st.session_state.answer_a, st.session_state.sources_a = generate_answer(st.session_state.db, model_name, hypothetical=True)
+        st.session_state.answer_b, st.session_state.sources_b = generate_answer(st.session_state.db, model_name, hypothetical=False)
 
+
+    if st.session_state.input:
+        
         col1, col2 = st.columns(2)
 
         with col1:
             st.header('Hypothetical embeddings')
-            st.markdown(answer_a)
+            st.markdown(st.session_state.answer_a)
             with st.expander('Sources', expanded=False):
-                st.markdown(sources_a)
+                st.markdown(st.session_state.sources_a)
         with col2:
             st.header('Normal embeddings')
-            st.markdown(answer_b)
+            st.markdown(st.session_state.answer_b)
             with st.expander('Sources', expanded=False):
-                st.markdown(sources_b)
+                st.markdown(st.session_state.sources_b)
 
         st.session_state.history = []
         st.session_state.sources = []
+
+        collector = FeedbackCollector(
+            component_name="default",
+            email=email,
+            password=password,
+        )
+
+        feedback = collector.st_feedback(
+            feedback_type="textbox",
+            model=model_name,
+            open_feedback_label="[Optional] Provide additional feedback",
+            metadata={
+                "user_input": user_input,
+                "answer_a": st.session_state.answer_a,
+                "answer_b": st.session_state.answer_b,
+                "sources_a": st.session_state.sources_a,
+                "sources_b": st.session_state.sources_b,
+            },
+            tags=["compare"],
+        )
 
 
 
@@ -232,8 +309,6 @@ st.sidebar.markdown(' [Github](https://github.com/e-johnstonn/docGPT)')
 st.sidebar.markdown('[More info on hypothetical embeddings here](https://arxiv.org/abs/2212.10496)', unsafe_allow_html=True)
 page = PAGES[selection]
 page()
-
-
 
 
 
