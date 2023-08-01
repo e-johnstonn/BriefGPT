@@ -65,8 +65,7 @@ def summarize():
     use_gpt_4 = st.checkbox("Use GPT-4 for the final prompt (STRONGLY recommended, requires GPT-4 API access - progress bar will appear to get stuck as GPT-4 is slow)", value=True)
     find_clusters = st.checkbox('Optimal clustering (saves on tokens)', value=False)
 
-
-    
+  
     if st.button('Summarize (click once and wait)'):
         st.session_state.input = True
         if input_method == 'Document':
@@ -98,6 +97,7 @@ def summarize():
                 "summary": st.session_state.summary,
             },
             tags=["summary"],
+            key = 'key_summary',
         )
 
 
@@ -197,6 +197,7 @@ def chat():
                 "answer": st.session_state['answer'][0],
             },
             tags=["chat"],
+            key = 'key_chat',
         )
 
 def documents():
@@ -281,7 +282,7 @@ def compare_results():
         feedback = collector.st_feedback(
             feedback_type="textbox",
             model=model_name,
-            open_feedback_label="[Optional] Provide additional feedback",
+            open_feedback_label="Please provide feedback on the embedding comparison",
             metadata={
                 "user_input": user_input,
                 "answer_a": st.session_state.answer_a,
@@ -290,6 +291,7 @@ def compare_results():
                 "sources_b": st.session_state.sources_b,
             },
             tags=["compare"],
+            key = 'key_compare',
         )
 
 
