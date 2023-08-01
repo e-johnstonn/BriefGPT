@@ -3,4 +3,5 @@
 /workspace.xml
 __pycache__/
 
-
+# Secrets
+../.streamlit/secrets.toml
