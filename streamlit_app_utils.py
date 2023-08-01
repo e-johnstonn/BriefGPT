@@ -156,10 +156,7 @@ def process_summarize_button(file_or_transcript, use_gpt_4, find_clusters, file=
         else:
             summary = doc_to_final_summary(doc, 10, initial_prompt_list, final_prompt_list, use_gpt_4)
 
-        st.markdown(summary, unsafe_allow_html=True)
-        with open(f'summaries/{name}_summary.txt', 'w') as f:
-            f.write(summary)
-        st.text(f' Summary saved to summaries/{name}_summary.txt')
+        return llm.model_name,summary,name
 
 
 
